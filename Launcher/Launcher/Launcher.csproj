@@ -1,0 +1,73 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net9.0-desktop</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <!-- Display name -->
+    <ApplicationTitle>Frogman Engine Launcher</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.usit.FrogmanEngineLauncher</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Package Publisher -->
+    <ApplicationPublisher>UnknownStryker Interactive Technologies</ApplicationPublisher>
+    <Company>UnknownStryker Interactive Technologies</Company>
+    <Authors>Unknown Stryker</Authors>
+    <Copyright>Copyright © 2023 UnknownStryker Interactive Technologies</Copyright>
+    <Trademark>Frogman Engine is a trademark of UnknownStryker Interactive Technologies</Trademark>
+
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+
+    <!-- Package Description -->
+    <Description>Frogman Engine Launcher</Description>
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+      MediaElement;
+    </UnoFeatures>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" />
+    <PackageReference Include="Svg.Skia" />
+    <PackageReference Include="Uno.WinUI.Svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="ProjectGeneratorPage.xaml.cs">
+      <DependentUpon>ProjectGeneratorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="EntryPage.xaml.cs">
+      <DependentUpon>EntryPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="GitHubSignInPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <PropertyGroup>
+     <UnoFeatures>WebView</UnoFeatures>
+   </PropertyGroup>
+  <ItemGroup>
+    <Page Update="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="ProjectGeneratorPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
