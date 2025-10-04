@@ -124,17 +124,17 @@ THE SOFTWARE.
                         <Image HorizontalAlignment="Center" VerticalAlignment="Top"
                                Source="/Assets/Icons/FE.png" Width="64" Height="64" Margin="0,10,0,100"/>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0" MinWidth="256" MaxWidth="256" TextAlignment="Center"
-                                   Text="{x:Bind ProjectName}" FontSize="18" FontWeight="Bold" Foreground="AliceBlue"/>
+                                   Text="{x:Bind ProjectInfo.ProjectName}" FontSize="18" FontWeight="Bold" Foreground="AliceBlue"/>
                         
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,40" TextAlignment="Center"
                                    Text="type: " FontSize="10" Foreground="Gray"/>
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,0,0,40" TextAlignment="Center"
-                                   Text="{x:Bind ProjectType}" FontSize="10" Foreground="Gray"/>
+                                   Text="{x:Bind ProjectInfo.ProjectType}" FontSize="10" Foreground="Gray"/>
         
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,25" TextAlignment="Center"
                                    Text="path: " FontSize="10" Foreground="Gray"/>
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,0,10,25" MinWidth="256" MaxWidth="256" TextAlignment="Left"
-                                   Text="{x:Bind ProjectPath}" FontSize="10" Foreground="Gray"/>
+                                   Text="{x:Bind ProjectInfo.ProjectPath}" FontSize="10" Foreground="Gray"/>
         
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" TextAlignment="Center"
                                    Text="Frogman Engine " FontSize="10" Foreground="Gray"/>

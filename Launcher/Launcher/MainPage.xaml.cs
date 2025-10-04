@@ -105,7 +105,13 @@ public sealed partial class MainPage : Page
             }
 
             string json = File.ReadAllText(projectPaths[i]!);
-            Froggy project = JsonSerializer.Deserialize<Froggy>(json);
+            Froggy? project = JsonSerializer.Deserialize<Froggy>(json);
+            if (project is null)
+            {
+                projectPaths[i] = null;
+                continue;
+            }
+
             _projects.Add(project);
             newProjectList += projectPaths[i] + ";";
         }
@@ -368,12 +374,12 @@ public sealed partial class MainPage : Page
         Debug.Assert(_selectedProject is not null);
 
         RefreshProjectList();
-        if (Directory.Exists(_selectedProject.Value.ProjectPath) is false)
+        if (Directory.Exists(_selectedProject.ProjectInfo.ProjectPath) is false)
         {
             return;
         }
-        Debug.Assert(_selectedProject.Value.ProjectPath is not null);
-        Process.Start("explorer.exe", _selectedProject.Value.ProjectPath);
+        Debug.Assert(_selectedProject.ProjectInfo.ProjectPath is not null);
+        Process.Start("explorer.exe", _selectedProject.ProjectInfo.ProjectPath);
     }
 
 

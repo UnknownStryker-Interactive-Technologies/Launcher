@@ -220,9 +220,9 @@ public sealed partial class ProjectGeneratorPage : Page
         Froggy froggy = new();
         Debug.Assert(_selectedEngineInfo is not null);
         froggy.EngineInfo = _selectedEngineInfo;
-        froggy.ProjectType = _projectType.ToString();
-        froggy.ProjectName = _newProjectName.Text;
-        froggy.ProjectPath = newProjectDir;
+        froggy.ProjectInfo.ProjectType = _projectType.ToString();
+        froggy.ProjectInfo.ProjectName = _newProjectName.Text;
+        froggy.ProjectInfo.ProjectPath = newProjectDir;
         string jsonFlavoredFroggy = System.Text.Json.JsonSerializer.Serialize<Froggy>(froggy, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
 
         string froggyFileName = _newProjectName.Text + ".froggy";
@@ -251,7 +251,7 @@ public sealed partial class ProjectGeneratorPage : Page
         {
         case ProjectType.cli:
             cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForCLI.txt")) );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectName.Trim());
+            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
@@ -263,7 +263,7 @@ public sealed partial class ProjectGeneratorPage : Page
 
         case ProjectType.game:
             cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForGame.txt")) );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectName.Trim());
+            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
@@ -275,7 +275,7 @@ public sealed partial class ProjectGeneratorPage : Page
 
         case ProjectType.dll:
             cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForDLL.txt")) );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectName.Trim());
+            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
@@ -286,7 +286,7 @@ public sealed partial class ProjectGeneratorPage : Page
 
         case ProjectType.lib:
             cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForLIB.txt")) );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectName.Trim());
+            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
