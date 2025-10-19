@@ -168,21 +168,56 @@ public sealed partial class ProjectGeneratorPage : Page
 
 
 
+    private string appDotHpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
+        "\r\n#include <FE/framework.h>\r\n\r\n\r\n" +
+        "class cli_application : public FE::framework::framework_base\r\n" +
+        "{\r\n" +
+        "public:" +
+        "\r\n\tcli_application(FE::int32 argc_p, FE::ASCII** argv_p) noexcept = default;" +
+        "\r\n\t~cli_application() noexcept override = default;\r\n" +
+        "\r\n\tvirtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;" +
+        "\r\n\tvirtual FE::int32 run() override;" +
+        "\r\n\tvirtual FE::int32 shutdown() override;" +
+        "\r\n};";
+    private string appDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
+        "\r\n#include <app.hpp>\r\n\r\n" +
+        "\r\nFE::int32 cli_application::launch(FE::int32 argc_p, FE::ASCII** argv_p)" +
+        "\r\n{" +
+        "\r\nreturn 0;" +
+        "\r\n};\r\n\r\n" +
+        "FE::int32 cli_application::run()" +
+        "\r\n{" +
+        "\r\nreturn 0;" +
+        "\r\n};\r\n\r\n" +
+        "FE::int32 cli_application::shutdown()" +
+         "\r\n{" +
+        "\r\nreturn 0;" +
+        "\r\n};\r\n\r\n" +
+        "CUSTOM_ENGINE(cli_application);";
+
+
+    private string mainDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
+        "\r\n#include <FE/framework.h>\r\n#include <FE/engine.hpp>\r\nFROGMAN_ENGINE();";
+
+
     private void OnClickCreate(object sender, RoutedEventArgs e)
     {
         if (String.IsNullOrEmpty(_newProjectDirectory.Text))
         {
             _errorText.Text = "Please select a valid directory.";
+            _newProjectName.IsReadOnly = false;
             return;
         }
         if (String.IsNullOrEmpty(_newProjectName.Text))
         {
             _errorText.Text = "Please enter a valid project name.";
+            _newProjectName.IsReadOnly = false;
             return;
         }
         if (_projectType is ProjectType.@null)
         {
             _errorText.Text = "Please select a project type.";
+            _newProjectName.IsReadOnly = false;
             return;
         }
         
@@ -244,9 +279,8 @@ public sealed partial class ProjectGeneratorPage : Page
         string? cmakeListsTxt;
         string buildDotBatFile = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "build.bat")) );
         File.WriteAllText(Path.Combine(pathToCMakeFolder, "build.bat"), buildDotBatFile);
-        byte[] BOM = { 0xEF, 0xBB, 0xBF };
-        File.WriteAllBytes(Path.Combine(pathToCMakeFolder, ".gitignore"), BOM);
-        File.WriteAllBytes(Path.Combine(pathToIncludeFolder, "placeholder.hpp"), BOM);
+
+        File.WriteAllText(Path.Combine(pathToCMakeFolder, ".gitignore"), String.Empty, System.Text.Encoding.UTF8);
         switch (_projectType)
         {
         case ProjectType.cli:
@@ -256,9 +290,9 @@ public sealed partial class ProjectGeneratorPage : Page
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-            File.WriteAllBytes(Path.Combine(pathToCMakeFolder, "generated.cpp"), BOM);
-
-            File.WriteAllBytes(Path.Combine(pathToSourceFolder, "placeholder.cpp"), BOM);
+            File.WriteAllText(Path.Combine(pathToCMakeFolder, "generated.cpp"), String.Empty, System.Text.Encoding.UTF8);
+            File.WriteAllText(Path.Combine(pathToIncludeFolder, "app.hpp"), appDotHpp, System.Text.Encoding.UTF8);
+            File.WriteAllText(Path.Combine(pathToSourceFolder, "app.cpp"), appDotCpp, System.Text.Encoding.UTF8);
             break;
 
         case ProjectType.game:
@@ -268,9 +302,8 @@ public sealed partial class ProjectGeneratorPage : Page
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-            File.WriteAllBytes(Path.Combine(pathToCMakeFolder, "generated.cpp"), BOM);
-            File.WriteAllBytes(Path.Combine(pathToCMakeFolder, "main.cpp"), BOM);
-
+            File.WriteAllText(Path.Combine(pathToCMakeFolder, "generated.cpp"), String.Empty, System.Text.Encoding.UTF8);
+            File.WriteAllText(Path.Combine(pathToCMakeFolder, "main.cpp"), mainDotCpp, System.Text.Encoding.UTF8);
             break;
 
         case ProjectType.dll:
@@ -280,8 +313,8 @@ public sealed partial class ProjectGeneratorPage : Page
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-
-            File.WriteAllBytes(Path.Combine(pathToSourceFolder, "placeholder.cpp"), BOM);
+            File.WriteAllText(Path.Combine(pathToIncludeFolder, "placeholder.hpp"), String.Empty, System.Text.Encoding.UTF8);
+            File.WriteAllText(Path.Combine(pathToSourceFolder, "placeholder.cpp"), String.Empty, System.Text.Encoding.UTF8);
             break;
 
         case ProjectType.lib:
@@ -291,8 +324,8 @@ public sealed partial class ProjectGeneratorPage : Page
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
 
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-
-            File.WriteAllBytes(Path.Combine(pathToSourceFolder, "placeholder.cpp"), BOM);
+            File.WriteAllText(Path.Combine(pathToIncludeFolder, "placeholder.hpp"), String.Empty, System.Text.Encoding.UTF8);
+            File.WriteAllText(Path.Combine(pathToSourceFolder, "placeholder.cpp"), String.Empty, System.Text.Encoding.UTF8);
             break;
         
         default:
