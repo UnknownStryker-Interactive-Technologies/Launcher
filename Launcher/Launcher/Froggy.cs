@@ -18,8 +18,7 @@ public class EngineInfo
 public class GlobalResourceLookUpTable
 {
     public List<Tuple<string?, string?>> WorldPaths { get; set; } = new();
-    public List<Tuple<string?, string?>> LevelPaths { get; set; } = new();
-    public List<Tuple<string?, string?>> AssetPaths { get; set; } = new();
+    public List<Tuple<string?, string?>> ModulePaths { get; set; } = new();
 }
 
 [Serializable]
@@ -32,6 +31,24 @@ public class ProjectInfo
     public string? EntryWorldPath { get; set; }
 }
 
+[Serializable]
+public class ProjectConfig
+{
+    public string? CompressionMethod { get; set; }
+    public string? DecompressionMethod { get; set; }
+
+    public string? EncryptionMethod { get; set; }
+    public string? DecryptionMethod { get; set; }
+
+    public uint MaxEntities { get; set; } = 10240;
+    public uint MaxComponentTypeCountHint { get; set; } = 1024;
+    public uint MaxSystemCountHint { get; set; } = 1024;
+
+    public uint GCIterationsPerFrame { get; set; } = 30;
+    public uint FiberStackSize { get; set; } = 1048576; // 1 MiB
+    public uint FibersPerThread { get; set; } = 3;
+}
+
 
 
 
@@ -41,54 +58,8 @@ public class Froggy // .froggy
     public EngineInfo EngineInfo { get; set; } = new();
     public ProjectInfo ProjectInfo { get; set; } = new();
     public GlobalResourceLookUpTable GlobalResourceLookUpTable { get; set; } = new();
-
-    public List<Tuple<string?, string?>> ModulePaths { get; set; } = new();
-
-    public string? CompressionMethod { get; set; }
-    public string? EncryptionMethod { get; set; }
+    public ProjectConfig ProjectConfig { get; set; } = new();
 }
 
 
-
-
-[Serializable]
-public class FModule // .fmodule
-{
-    public string? ModuleName { get; set; }
-    public string? ModulePath { get; set; }
-
-    public List<string?> ReflectiveMethods { get; set; } = new();
-}
-
-
-[Serializable]
-public class AO // .ao
-{
-    public string? AOName { get; set; }
-    public string? AOPath { get; set; }
-
-    public string? InfilPointPath { get; set; }
-    public List<Tuple<string?, string?>> LevelPaths { get; set; } = new();
-    public List<Tuple<string?, string?>> AssetPaths { get; set; } = new();
-}
-
-
-[Serializable]
-public class FLevel // .flevel
-{
-    public string? LevelName { get; set; }
-    public string? LevelPath { get; set; }
-
-    public List<Tuple<string?, string?>> AssetPaths { get; set; } = new();
-}
-
-
-[Serializable]
-public class FAsset // .fasset
-{
-    public string? AssetName { get; set; }
-    public string? AssetPath { get; set; }
-
-    public string? AssetType { get; set; }
-    public List<Tuple<string?, string?>> AssetComponentPaths { get; set; } = new();
-}
+// .fmodule, .ao, .flevel, .fasset, .oplan
