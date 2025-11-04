@@ -49,6 +49,27 @@ public class ProjectConfig
     public uint FibersPerThread { get; set; } = 3;
 }
 
+[Serializable]
+public class WindowConfig
+{
+    public string? Title { get; set; }
+    public string? IconPath { get; set; }
+    public Int32 MonitorIndex { get; set; } = 0;
+    public bool ShouldEnableVSync { get; set; } = false;
+    public bool IsAtopEverything { get; set; } = false;
+    public bool ShouldScaleContentToMonitorDPI { get; set; } = true;
+    public bool HasBorder { get; set; } = true;
+    public UInt16 SwapChainBufferCount { get; set; } = 3;
+    public bool IsVirtualReality { get; set; } = false;
+    public bool ShouldEnableHDR { get; set; } = false;
+     
+    public Int32 Width { get; set; } = 0;
+    public Int32 Height { get; set; } = 0;
+    public bool IsResizable { get; set; } = true;
+    public bool IsMaximized { get; set; } = true;
+    public bool IsFullScreen { get; set; } = false;
+}
+
 
 
 
@@ -59,6 +80,7 @@ public class Froggy // .froggy
     public ProjectInfo ProjectInfo { get; set; } = new();
     public GlobalResourceLookUpTable GlobalResourceLookUpTable { get; set; } = new();
     public ProjectConfig ProjectConfig { get; set; } = new();
+    public WindowConfig WindowConfig { get; set; } = new();
 }
 
 
