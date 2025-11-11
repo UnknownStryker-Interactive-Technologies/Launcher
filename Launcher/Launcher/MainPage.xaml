@@ -102,7 +102,7 @@ THE SOFTWARE.
                                        Text="path: " FontSize="10" Foreground="Gray"/>
                             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,10,0,10"
                                        Text="{x:Bind InstallationPath}" FontSize="10" Foreground="Gray"
-                                       TextWrapping="WrapWholeWords" MinWidth="128" MaxWidth="128"/>
+                                       TextWrapping="NoWrap" MinWidth="128" MaxWidth="4096"/>
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
