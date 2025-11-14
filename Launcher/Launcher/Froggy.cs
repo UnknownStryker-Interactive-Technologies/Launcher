@@ -47,6 +47,7 @@ public class ProjectConfig
     public uint MaxEngineSystemCountHint { get; set; } = 1024;
 
     public uint GCIterationsPerFrame { get; set; } = 30;
+    public uint FramePerReachabilityAnalysis { get; set; } = 60;
     public uint FiberStackSize { get; set; } = 1048576; // 1 MiB
     public uint FibersPerThread { get; set; } = 3;
 
