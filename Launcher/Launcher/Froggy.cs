@@ -42,12 +42,11 @@ public class ProjectConfig
     public string? EncryptionMethod { get; set; }
     public string? DecryptionMethod { get; set; }
 
-    public uint MaxEngineEntities { get; set; } = 1024;
+    public uint MaxEngineArchetypeCountHint { get; set; } = 1024;
     public uint MaxEngineComponentTypeCountHint { get; set; } = 1024;
-    public uint MaxEngineSystemCountHint { get; set; } = 1024;
 
     public uint GCIterationsPerFrame { get; set; } = 30;
-    public uint FramePerReachabilityAnalysis { get; set; } = 60;
+    public uint FramesPerReachabilityAnalysis { get; set; } = 60;
     public uint FiberStackSize { get; set; } = 1048576; // 1 MiB
     public uint FibersPerThread { get; set; } = 3;
 
