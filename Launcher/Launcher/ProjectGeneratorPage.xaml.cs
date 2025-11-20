@@ -197,7 +197,7 @@ public sealed partial class ProjectGeneratorPage : Page
 
 
     private string mainDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
-        "\r\n#include <FE/framework.hxx>\r\n#include <FE/engine.hxx>\r\nFROGMAN_ENGINE();";
+        "\r\n#include <FE/framework.hxx>\r\n#include <FE/engine.hpp>\r\nFROGMAN_ENGINE();";
 
 
     private void OnClickCreate(object sender, RoutedEventArgs e)
