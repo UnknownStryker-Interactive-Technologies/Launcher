@@ -11,6 +11,8 @@
     <PackageVersion Include="Google.Cloud.SecretManager.V1" Version="2.6.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
+    <PackageVersion Include="SevenZip" Version="19.0.0" />
+    <PackageVersion Include="SharpCompress" Version="0.47.3" />
     <PackageVersion Include="Svg.Skia" Version="3.2.1" />
     <PackageVersion Include="Uno.WinUI.Svg" Version="6.2.58" />
   </ItemGroup>

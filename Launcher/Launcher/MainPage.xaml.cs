@@ -5,6 +5,10 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Win32;
+
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
 /*
  The MIT License
 
@@ -262,7 +266,7 @@ public sealed partial class MainPage : Page
                     continue;
                 }
 
-                if (releaseJSON.ToString().Contains(".zip") is false)
+                if (releaseJSON.ToString().Contains(".7z") is false)
                 {
                     continue;
                 }
@@ -271,14 +275,14 @@ public sealed partial class MainPage : Page
                 downloadURL = asset["browser_download_url"]?.ToString();
                 if (string.IsNullOrEmpty(downloadURL))
                 {
-                    throw new Exception("The zipball_url property is missing or empty in the JSON response.");
+                    throw new Exception("The 7 zip file url property is missing or empty in the JSON response.");
                 }
 
 
                 using HttpResponseMessage downloadRequestResponse = client.GetAsync(downloadURL).Result;
                 using Stream responseStream = downloadRequestResponse.Content.ReadAsStream();
 
-                string downloadPath = _installationPath + ".zip";
+                string downloadPath = _installationPath + ".7z";
                 using FileStream fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None);
 
                 responseStream.CopyTo(fileStream);
@@ -286,7 +290,24 @@ public sealed partial class MainPage : Page
                 fileStream.Close();
                 responseStream.Close();
 
-                ZipFile.ExtractToDirectory(downloadPath, _installationPath);
+                {
+                    Directory.CreateDirectory(_installationPath);
+                    using IArchive archive = ArchiveFactory.OpenArchive(downloadPath);
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (entry.IsDirectory)
+                            continue;
+
+                        entry.WriteToDirectory(_installationPath,
+                            new ExtractionOptions
+                            {
+                                ExtractFullPath = true,
+                                Overwrite = true
+                            }
+                        );
+                    }
+                }
+
                 File.Delete(downloadPath);
             }
 

@@ -38,6 +38,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
+    <PackageReference Include="SevenZip" />
+    <PackageReference Include="SharpCompress" />
     <PackageReference Include="Svg.Skia" />
     <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
