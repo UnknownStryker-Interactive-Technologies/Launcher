@@ -59,7 +59,7 @@ public sealed partial class MainPage : Page
 
         RefreshEngineVersionList();
         RefreshProjectList();
-        RegisterFroggyFileExtension(Path.Combine(AppContext.BaseDirectory, "icon.ico"));
+        RegisterFroggyFileExtension(Path.Combine(AppContext.BaseDirectory, "Assets\\Icons\\icon.ico"));
 
         EnableEnginePage();
     }
