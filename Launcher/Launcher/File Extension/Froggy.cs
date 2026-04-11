@@ -1,7 +1,3 @@
-
-
-
-
 namespace Launcher;
 
 
@@ -20,7 +16,6 @@ public class GlobalResourceLookUpTable
     public string? EntryWorldPath { get; set; }
 
     public List<Tuple<string?, string?>> WorldPaths { get; set; } = new();
-    public List<Tuple<string?, string?>> ModulePaths { get; set; } = new();
 }
 
 [Serializable]
@@ -57,7 +52,10 @@ public class ProjectConfig
 public class WindowConfig
 {
     public string? Title { get; set; }
-    public string? IconPath { get; set; }
+    public string[] IconPath { get; set; } = Array.Empty<string>();
+    public string[] IntroVideo1Path { get; set; } = Array.Empty<string>();
+    public string[] IntroVideo2Path { get; set; } = Array.Empty<string>();
+    public string[] IntroVideo3Path { get; set; } = Array.Empty<string>();
     public Int32 MonitorIndex { get; set; } = 0;
     public bool ShouldEnableVSync { get; set; } = false;
     public bool IsAtopEverything { get; set; } = false;

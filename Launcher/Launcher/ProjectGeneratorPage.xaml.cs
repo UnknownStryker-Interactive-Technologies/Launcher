@@ -242,12 +242,16 @@ public sealed partial class ProjectGeneratorPage : Page
         }
 
 
+        string pathToAssetsFolder = Path.Combine(newProjectDir, "Assets");
         string pathToCMakeFolder = Path.Combine(newProjectDir, "CMake");
         string pathToIncludeFolder = Path.Combine(newProjectDir, "Include");
         string pathToSourceFolder = Path.Combine(newProjectDir, "Source");
 
         Directory.CreateDirectory(newProjectDir);
         Directory.CreateDirectory(Path.Combine(newProjectDir, "Binaries"));
+        Directory.CreateDirectory(pathToAssetsFolder);
+        Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Icon"));
+        Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Video"));
         Directory.CreateDirectory(pathToCMakeFolder);
         Directory.CreateDirectory(pathToIncludeFolder);
         Directory.CreateDirectory(pathToSourceFolder);
