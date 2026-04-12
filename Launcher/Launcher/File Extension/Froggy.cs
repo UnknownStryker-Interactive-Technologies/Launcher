@@ -52,17 +52,15 @@ public class ProjectConfig
 public class WindowConfig
 {
     public string? Title { get; set; }
-    public string[] IconPath { get; set; } = Array.Empty<string>();
-    public string[] IntroVideo1Path { get; set; } = Array.Empty<string>();
-    public string[] IntroVideo2Path { get; set; } = Array.Empty<string>();
-    public string[] IntroVideo3Path { get; set; } = Array.Empty<string>();
+    public string[] IconPaths { get; set; } = Array.Empty<string>();
+    public string[] RandomPlayIntroVideoPaths { get; set; } = Array.Empty<string>();
+    public string[] SequentialPlayIntroVideoPaths { get; set; } = Array.Empty<string>();
     public Int32 MonitorIndex { get; set; } = 0;
     public bool ShouldEnableVSync { get; set; } = false;
     public bool IsAtopEverything { get; set; } = false;
     public bool ShouldScaleContentToMonitorDPI { get; set; } = true;
     public bool HasBorder { get; set; } = true;
     public UInt16 SwapChainBufferCount { get; set; } = 3;
-    public bool IsVirtualReality { get; set; } = false;
     public bool ShouldEnableHDR { get; set; } = false;
      
     public Int32 Width { get; set; } = 0;
