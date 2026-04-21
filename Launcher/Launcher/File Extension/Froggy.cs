@@ -55,21 +55,9 @@ public class WindowConfig
     public string[] IconPaths { get; set; } = Array.Empty<string>();
     public string[] RandomPlayIntroVideoPaths { get; set; } = Array.Empty<string>();
     public string[] SequentialPlayIntroVideoPaths { get; set; } = Array.Empty<string>();
-    public Int32 MonitorIndex { get; set; } = 0;
-    public bool ShouldEnableVSync { get; set; } = false;
-    public bool IsAtopEverything { get; set; } = false;
-    public bool ShouldScaleContentToMonitorDPI { get; set; } = true;
-    public bool HasBorder { get; set; } = true;
     public UInt16 SwapChainBufferCount { get; set; } = 3;
-    public bool ShouldEnableHDR { get; set; } = false;
-     
-    public Int32 Width { get; set; } = 0;
-    public Int32 Height { get; set; } = 0;
-    public bool IsResizable { get; set; } = true;
-    public bool IsMaximized { get; set; } = true;
-    public bool IsFullScreen { get; set; } = false;
 }
-
+// -enable-fullscreen -enable-vsync
 
 
 
