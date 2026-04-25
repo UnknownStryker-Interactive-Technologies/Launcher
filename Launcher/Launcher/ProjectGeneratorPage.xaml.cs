@@ -252,6 +252,7 @@ public sealed partial class ProjectGeneratorPage : Page
         Directory.CreateDirectory(pathToAssetsFolder);
         Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Icon"));
         Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Video"));
+        Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Shaders"));
         Directory.CreateDirectory(pathToCMakeFolder);
         Directory.CreateDirectory(pathToIncludeFolder);
         Directory.CreateDirectory(pathToSourceFolder);
