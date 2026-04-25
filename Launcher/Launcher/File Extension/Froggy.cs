@@ -52,8 +52,8 @@ public class ProjectConfig
 public class WindowConfig
 {
     public string? Title { get; set; }
-    public string[] IconPaths { get; set; } = Array.Empty<string>();
-    public string[] RandomPlayIntroVideoPaths { get; set; } = Array.Empty<string>();
+    public string[] IconPaths { get; set; } = { "Assets\\Icon\\runtime icon.png" };
+    public string[] RandomPlayIntroVideoPaths { get; set; } = { "Assets\\Video\\runtime splash video 1.mp4", "Assets\\Video\\runtime splash video 2.mp4" };
     public string[] SequentialPlayIntroVideoPaths { get; set; } = Array.Empty<string>();
     public UInt16 SwapChainBufferCount { get; set; } = 3;
 }

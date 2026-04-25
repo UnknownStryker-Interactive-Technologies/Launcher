@@ -250,9 +250,6 @@ public sealed partial class ProjectGeneratorPage : Page
         Directory.CreateDirectory(newProjectDir);
         Directory.CreateDirectory(Path.Combine(newProjectDir, "Binaries"));
         Directory.CreateDirectory(pathToAssetsFolder);
-        Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Icon"));
-        Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Video"));
-        Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Shaders"));
         Directory.CreateDirectory(pathToCMakeFolder);
         Directory.CreateDirectory(pathToIncludeFolder);
         Directory.CreateDirectory(pathToSourceFolder);
@@ -280,6 +277,8 @@ public sealed partial class ProjectGeneratorPage : Page
         File.WriteAllText(projectListPath, contents);
 
 
+        string launcherAssetFolderDir = Path.Combine(AppContext.BaseDirectory, "Assets");
+
         // Generate the CMakeLists.txt and run the CMake to generate the project files. ${YOUR_PROJECT_NAME} ${TARGET_FE_GDK_PATH}
         string? cmakeListsTxt;
         string buildDotBatFile = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "build.bat")) );
@@ -289,7 +288,7 @@ public sealed partial class ProjectGeneratorPage : Page
         switch (_projectType)
         {
         case ProjectType.cli:
-            cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForCLI.txt")) );
+            cmakeListsTxt = File.ReadAllText( Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForCLI.txt") );
             cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
@@ -301,7 +300,7 @@ public sealed partial class ProjectGeneratorPage : Page
             break;
 
         case ProjectType.game:
-            cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForGame.txt")) );
+            cmakeListsTxt = File.ReadAllText( Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForGame.txt") );
             cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
@@ -309,10 +308,21 @@ public sealed partial class ProjectGeneratorPage : Page
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "generated.cpp"), String.Empty, System.Text.Encoding.UTF8);
             File.WriteAllText(Path.Combine(pathToCMakeFolder, "main.cpp"), mainDotCpp, System.Text.Encoding.UTF8);
+
+            string iconFolder = Path.Combine(pathToAssetsFolder, "Icon");
+            Directory.CreateDirectory(iconFolder);
+            File.Copy(Path.Combine(launcherAssetFolderDir, "runtime icon.png"), Path.Combine(iconFolder, "runtime icon.png"));
+
+            string videoFolder = Path.Combine(pathToAssetsFolder, "Video");
+            Directory.CreateDirectory(videoFolder);
+            File.Copy(Path.Combine(launcherAssetFolderDir, "runtime splash video 1.mp4"), Path.Combine(videoFolder, "runtime splash video 1.mp4"));
+            File.Copy(Path.Combine(launcherAssetFolderDir, "runtime splash video 2.mp4"), Path.Combine(videoFolder, "runtime splash video 2.mp4"));
+
+            Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Shaders"));
             break;
 
         case ProjectType.dll:
-            cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForDLL.txt")) );
+            cmakeListsTxt = File.ReadAllText( Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForDLL.txt") );
             cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
@@ -323,7 +333,7 @@ public sealed partial class ProjectGeneratorPage : Page
             break;
 
         case ProjectType.lib:
-            cmakeListsTxt = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "CMakeListsTemplateForLIB.txt")) );
+            cmakeListsTxt = File.ReadAllText( Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForLIB.txt") );
             cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
             cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
             cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
