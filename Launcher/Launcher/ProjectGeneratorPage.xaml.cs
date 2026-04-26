@@ -356,7 +356,7 @@ public sealed partial class ProjectGeneratorPage : Page
         _warningText.Visibility = Visibility.Collapsed;
         Frame.Navigate(typeof(MainPage));
 #if !DEBUG
-        Window.Current.Close();
+        Window.Current?.Close();
 #endif
     }
 }
