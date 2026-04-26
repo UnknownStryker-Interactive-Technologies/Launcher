@@ -173,7 +173,7 @@ public sealed partial class ProjectGeneratorPage : Page
         "class cli_application : public FE::framework::framework_base\r\n" +
         "{\r\n" +
         "public:" +
-        "\r\n\tcli_application(FE::int32 argc_p, FE::ASCII** argv_p) noexcept = default;" +
+        "\r\n\tcli_application(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p) {};" +
         "\r\n\t~cli_application() noexcept override = default;\r\n" +
         "\r\n\tvirtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;" +
         "\r\n\tvirtual FE::int32 run() override;" +
@@ -183,15 +183,16 @@ public sealed partial class ProjectGeneratorPage : Page
         "\r\n#include <app.hpp>\r\n\r\n" +
         "\r\nFE::int32 cli_application::launch(FE::int32 argc_p, FE::ASCII** argv_p)" +
         "\r\n{" +
-        "\r\nreturn 0;" +
+        "\r\n    (argc_p); (argv_p);" +
+        "\r\n    return 0;" +
         "\r\n};\r\n\r\n" +
         "FE::int32 cli_application::run()" +
         "\r\n{" +
-        "\r\nreturn 0;" +
+        "\r\n    return 0;" +
         "\r\n};\r\n\r\n" +
         "FE::int32 cli_application::shutdown()" +
          "\r\n{" +
-        "\r\nreturn 0;" +
+        "\r\n    return 0;" +
         "\r\n};\r\n\r\n" +
         "CUSTOM_ENGINE(cli_application);";
 
@@ -284,7 +285,7 @@ public sealed partial class ProjectGeneratorPage : Page
         string buildDotBatFile = File.ReadAllText( Path.Combine(AppContext.BaseDirectory, Path.Combine("Assets", "build.bat")) );
         File.WriteAllText(Path.Combine(pathToCMakeFolder, "build.bat"), buildDotBatFile);
 
-        File.WriteAllText(Path.Combine(pathToCMakeFolder, ".gitignore"), String.Empty, System.Text.Encoding.UTF8);
+        File.WriteAllText(Path.Combine(pathToCMakeFolder, ".gitignore"), "Solution_X64_AVX/\r\nSolution_X64_AVX512F/", System.Text.Encoding.UTF8);
         switch (_projectType)
         {
         case ProjectType.cli:
