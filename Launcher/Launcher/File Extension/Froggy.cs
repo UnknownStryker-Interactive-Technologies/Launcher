@@ -69,21 +69,21 @@ public class WindowConfig
 
 
 
-[Serializable]
-public class ShaderDefines
-{
-    public string Identifier { get; set; } = String.Empty;
-    public string Value { get; set; } = String.Empty;
-}
+//[Serializable]
+//public class ShaderDefines
+//{
+//    public string Identifier { get; set; } = String.Empty;
+//    public string Value { get; set; } = String.Empty;
+//}
 
-[Serializable]
-public class Shader
-{
-    public string Source { get; set; } = String.Empty;
-    public string MainFunction { get; set; } = String.Empty;
-    public string ShaderTarget { get; set; } = String.Empty;
-    public List<ShaderDefines> Defines { get; set; } = new();
-}
+//[Serializable]
+//public class Shader
+//{
+//    public string Source { get; set; } = String.Empty;
+//    public string MainFunction { get; set; } = String.Empty;
+//    public string ShaderTarget { get; set; } = String.Empty;
+//    public List<ShaderDefines> Defines { get; set; } = new();
+//}
 
 
 
@@ -95,7 +95,7 @@ public class Froggy // .froggy
     public ProjectInfo ProjectInfo { get; set; } = new();
 
     public ProjectConfig ProjectConfig { get; set; } = new();
-    public List<Shader> Shaders { get; set; } = new();
+    // public List<Shader> Shaders { get; set; } = new();
 }
 
 
