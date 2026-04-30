@@ -320,6 +320,10 @@ public sealed partial class ProjectGeneratorPage : Page
             File.Copy(Path.Combine(launcherAssetFolderDir, "runtime splash video 2.mp4"), Path.Combine(videoFolder, "runtime splash video 2.mp4"));
 
             Directory.CreateDirectory(Path.Combine(pathToAssetsFolder, "Shaders"));
+
+            string splashFolder = Path.Combine(pathToAssetsFolder, "Splash");
+            Directory.CreateDirectory(splashFolder);
+            File.Copy(Path.Combine(launcherAssetFolderDir, "shader compilation.png"), Path.Combine(splashFolder, "shader compilation.png"));
             break;
 
         case ProjectType.dll:
