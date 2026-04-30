@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Diagnostics;
-using System.IO.Compression;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -59,7 +59,7 @@ public sealed partial class MainPage : Page
 
         RefreshEngineVersionList();
         RefreshProjectList();
-        RegisterFroggyFileExtension(Path.Combine(AppContext.BaseDirectory, "Assets\\Icons\\icon.ico"));
+        RegisterFroggyFileExtension(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets\\Icons\\icon.ico"));
 
         EnableEnginePage();
     }
@@ -89,7 +89,7 @@ public sealed partial class MainPage : Page
     {
         _projects.Clear();
 
-        string projectListPath = Path.Combine(AppContext.BaseDirectory, "froggies.flist");
+        string projectListPath = System.IO.Path.Combine(AppContext.BaseDirectory, "froggies.flist");
         if (File.Exists(projectListPath) is false)
         {
             File.WriteAllText(projectListPath, "");
@@ -211,7 +211,8 @@ public sealed partial class MainPage : Page
 
 
     private const string _engineInstallerLatestReleaseUrl = "https://api.github.com/repos/UnknownStryker-Interactive-Technology/Installer/releases/latest";
-    string _installationPath = Path.Combine(AppContext.BaseDirectory, "Installer.Windows.11.Edition");
+    string _installationPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Installer.Windows.11.Edition");
+    string _installerUpdateDatePath = System.IO.Path.Combine(AppContext.BaseDirectory, "installer update.date");
     private bool _isClicked = false;
     private void OnClickLaunchEngineInstaller(object sender, RoutedEventArgs e)
     {
@@ -223,11 +224,6 @@ public sealed partial class MainPage : Page
             }
             _isClicked = true;
             RefreshEngineVersionList();
-
-            if ( Directory.Exists(_installationPath) is true) // Always fetch the latest installer.
-            {
-                Directory.Delete(_installationPath, true);
-            }
 
             using HttpClient client = new();
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Frogman-Engine-Launcher", "1.0"));
@@ -253,6 +249,7 @@ public sealed partial class MainPage : Page
 
 
             string? downloadURL;
+            string? updateDate;
             foreach (JsonNode? asset in jsonNode.AsArray())
             {
                 if (asset is null)
@@ -278,37 +275,60 @@ public sealed partial class MainPage : Page
                     throw new Exception("The 7 zip file url property is missing or empty in the JSON response.");
                 }
 
-
-                using HttpResponseMessage downloadRequestResponse = client.GetAsync(downloadURL).Result;
-                using Stream responseStream = downloadRequestResponse.Content.ReadAsStream();
-
-                string downloadPath = _installationPath + ".7z";
-                using FileStream fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                responseStream.CopyTo(fileStream);
-
-                fileStream.Close();
-                responseStream.Close();
-
+                string previousUpdateDate = String.Empty;
+                if (File.Exists(_installerUpdateDatePath) is true)
                 {
-                    Directory.CreateDirectory(_installationPath);
-                    using IArchive archive = ArchiveFactory.OpenArchive(downloadPath);
-                    foreach (var entry in archive.Entries)
-                    {
-                        if (entry.IsDirectory)
-                            continue;
-
-                        entry.WriteToDirectory(_installationPath,
-                            new ExtractionOptions
-                            {
-                                ExtractFullPath = true,
-                                Overwrite = true
-                            }
-                        );
-                    }
+                    previousUpdateDate = File.ReadAllText(_installerUpdateDatePath);
                 }
 
-                File.Delete(downloadPath);
+                updateDate = asset["updated_at"]?.ToString();
+                if (string.IsNullOrEmpty(updateDate))
+                {
+                    throw new Exception("The release date property is missing or empty in the JSON response.");
+                }
+
+
+                if ((previousUpdateDate != updateDate) ||
+                    (Directory.Exists(_installationPath) is false))
+                {
+                    if (Directory.Exists(_installationPath) is true) // Always fetch the latest installer.
+                    {
+                        Directory.Delete(_installationPath, true);
+                    }
+
+                    File.WriteAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "installer update.date"), updateDate);
+
+                    using HttpResponseMessage downloadRequestResponse = client.GetAsync(downloadURL).Result;
+                    using Stream responseStream = downloadRequestResponse.Content.ReadAsStream();
+
+                    string downloadPath = _installationPath + ".7z";
+                    using FileStream fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                    responseStream.CopyTo(fileStream);
+
+                    fileStream.Close();
+                    responseStream.Close();
+
+                    {
+                        Directory.CreateDirectory(_installationPath);
+                        using IArchive archive = ArchiveFactory.OpenArchive(downloadPath);
+                        foreach (var entry in archive.Entries)
+                        {
+                            if (entry.IsDirectory)
+                                continue;
+
+                            entry.WriteToDirectory(_installationPath,
+                                new ExtractionOptions
+                                {
+                                    ExtractFullPath = true,
+                                    Overwrite = true
+                                }
+                            );
+                        }
+                    }
+
+                    File.Delete(downloadPath);
+                }
             }
 
             string _appName = "\0";
@@ -316,7 +336,7 @@ public sealed partial class MainPage : Page
             {
                 if (file.EndsWith(".exe"))
                 {
-                    _appName = Path.GetFileName(file);
+                    _appName = System.IO.Path.GetFileName(file);
                     break;
                 }
             }
@@ -324,7 +344,7 @@ public sealed partial class MainPage : Page
 
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
-                FileName = Path.Combine(AppContext.BaseDirectory, Path.Combine(_installationPath, _appName)),
+                FileName = System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(_installationPath, _appName)),
                 UseShellExecute = true,
                 Verb = "runas"
             };
