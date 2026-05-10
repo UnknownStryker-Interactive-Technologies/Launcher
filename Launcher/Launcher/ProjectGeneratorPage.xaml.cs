@@ -323,7 +323,9 @@ public sealed partial class ProjectGeneratorPage : Page
 
             string splashFolder = System.IO.Path.Combine(pathToAssetsFolder, "Splash");
             Directory.CreateDirectory(splashFolder);
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "shader compilation.png"), System.IO.Path.Combine(splashFolder, "shader compilation.png"));
+            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "Shader Compile Splash.png"), System.IO.Path.Combine(splashFolder, "Shader Compile Splash.png"));
+            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "Shader Compile Splash 2.png"), System.IO.Path.Combine(splashFolder, "Shader Compile Splash 2.png"));
+            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "Shader Compile Splash 3.png"), System.IO.Path.Combine(splashFolder, "Shader Compile Splash 3.png"));
             break;
 
         case ProjectType.dll:
