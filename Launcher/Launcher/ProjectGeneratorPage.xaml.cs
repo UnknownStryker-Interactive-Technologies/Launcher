@@ -16,27 +16,27 @@ using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
 using static Uno.WinRTFeatureConfiguration.Storage;
 /*
- The MIT License
+    GNU AFFERO GENERAL PUBLIC LICENSE
+    Version 3, 19 November 2007
 
-Copyright (c) 2025 by UNKNOWN STRYKER
+    Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+    Everyone is permitted to copy and distribute verbatim copies
+    of this license document, but changing it is not allowed.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Copyright © 2026 by UNKNOWN STRYKER (Hojin Lee / Joey)
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -166,38 +166,7 @@ public sealed partial class ProjectGeneratorPage : Page
     }
 
 
-
-
-    private string appDotHpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
-        "\r\n#include <FE/framework.hxx>\r\n\r\n\r\n" +
-        "class cli_application : public FE::framework::framework_base\r\n" +
-        "{\r\n" +
-        "public:" +
-        "\r\n\tcli_application(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p) {};" +
-        "\r\n\t~cli_application() noexcept override = default;\r\n" +
-        "\r\n\tvirtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;" +
-        "\r\n\tvirtual FE::int32 run() override;" +
-        "\r\n\tvirtual FE::int32 shutdown() override;" +
-        "\r\n};";
-    private string appDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
-        "\r\n#include <app.hpp>\r\n\r\n" +
-        "\r\nFE::int32 cli_application::launch(FE::int32 argc_p, FE::ASCII** argv_p)" +
-        "\r\n{" +
-        "\r\n    (argc_p); (argv_p);" +
-        "\r\n    return 0;" +
-        "\r\n};\r\n\r\n" +
-        "FE::int32 cli_application::run()" +
-        "\r\n{" +
-        "\r\n    return 0;" +
-        "\r\n};\r\n\r\n" +
-        "FE::int32 cli_application::shutdown()" +
-         "\r\n{" +
-        "\r\n    return 0;" +
-        "\r\n};\r\n\r\n" +
-        "CUSTOM_ENGINE(cli_application);";
-
-
-    private string mainDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine Apache License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
+    private string mainDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
         "\r\n#include <FE/framework.hxx>\r\n#include <FE/engine.hpp>\r\nFROGMAN_ENGINE();";
 
 
@@ -219,6 +188,15 @@ public sealed partial class ProjectGeneratorPage : Page
         {
             _errorText.Text = "Please select a project type.";
             _newProjectName.IsReadOnly = false;
+            return;
+        }
+
+        switch (_projectType)
+        {
+        case ProjectType.cli:
+        case ProjectType.dll:
+        case ProjectType.lib:
+            _errorText.Text = "Sorry, this feature is under development.";
             return;
         }
         
@@ -282,8 +260,14 @@ public sealed partial class ProjectGeneratorPage : Page
 
         // Generate the CMakeLists.txt and run the CMake to generate the project files. ${YOUR_PROJECT_NAME} ${TARGET_FE_GDK_PATH}
         string? cmakeListsTxt;
-        string buildDotBatFile = File.ReadAllText( System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine("Assets", "build.bat")) );
+        string buildDotBatFile = File.ReadAllText( System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(launcherAssetFolderDir, "build.bat")) );
         File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "build.bat"), buildDotBatFile);
+
+        string buildWithVs2022BatFile = File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(launcherAssetFolderDir, "build-with-vs2022.bat")));
+        File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "build-with-vs2022.bat"), buildWithVs2022BatFile);
+
+        string buildWithVs2026BatFile = File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(launcherAssetFolderDir, "build-with-vs2026.bat")));
+        File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "build-with-vs2026.bat"), buildWithVs2026BatFile);
 
         File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, ".gitignore"), "Solution_X64_AVX/\r\nSolution_X64_AVX512F/", System.Text.Encoding.UTF8);
         switch (_projectType)
@@ -296,8 +280,8 @@ public sealed partial class ProjectGeneratorPage : Page
 
             File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
             File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "generated.cpp"), String.Empty, System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToIncludeFolder, "app.hpp"), appDotHpp, System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToSourceFolder, "app.cpp"), appDotCpp, System.Text.Encoding.UTF8);
+            File.WriteAllText(System.IO.Path.Combine(pathToIncludeFolder, "app.hpp"), Path.Combine(launcherAssetFolderDir, "cliapp.hpp"), System.Text.Encoding.UTF8);
+            File.WriteAllText(System.IO.Path.Combine(pathToSourceFolder, "app.cpp"), Path.Combine(launcherAssetFolderDir, "cliapp.cpp"), System.Text.Encoding.UTF8);
             break;
 
         case ProjectType.game:
