@@ -12,8 +12,9 @@
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
     <PackageVersion Include="SevenZip" Version="19.0.0" />
-    <PackageVersion Include="SharpCompress" Version="0.47.3" />
+    <PackageVersion Include="SharpCompress" Version="0.50.4" />
     <PackageVersion Include="Svg.Skia" Version="3.2.1" />
+    <PackageVersion Include="Tmds.DBus.Protocol" Version="0.94.2" />
     <PackageVersion Include="Uno.WinUI.Svg" Version="6.2.58" />
   </ItemGroup>
 </Project>

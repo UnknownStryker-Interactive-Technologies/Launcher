@@ -41,6 +41,7 @@
     <PackageReference Include="SevenZip" />
     <PackageReference Include="SharpCompress" />
     <PackageReference Include="Svg.Skia" />
+    <PackageReference Include="Tmds.DBus.Protocol" />
     <PackageReference Include="Uno.WinUI.Svg" />
   </ItemGroup>
   <ItemGroup>
