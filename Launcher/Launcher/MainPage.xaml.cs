@@ -44,7 +44,7 @@ namespace Launcher;
 /// </summary>
 public sealed partial class MainPage : Page
 {
-    private Uri _news = new("https://savory-moth-a00.notion.site/News-Updates-27a5fa4fb82e800eb173d5ba463171c0?source=copy_link");
+    private Uri _news = new("https://velog.io/@unknownstryker/posts");
     private Uri _docs = new("https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b");
     private List<EngineInfo> _engineVersions = new();
     private List<Froggy> _projects = new();
