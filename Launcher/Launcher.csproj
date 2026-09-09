@@ -13,11 +13,11 @@
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <!-- Package Publisher -->
-    <ApplicationPublisher>UnknownStryker Interactive Technologies</ApplicationPublisher>
-    <Company>UnknownStryker Interactive Technologies</Company>
-    <Authors>Unknown Stryker</Authors>
-    <Copyright>Copyright © 2023 UnknownStryker Interactive Technologies</Copyright>
-    <Trademark>Frogman Engine is a trademark of UnknownStryker Interactive Technologies</Trademark>
+    <ApplicationPublisher>UNKNOWNSTRYKER INTERACTIVE TECHNOLOGIES</ApplicationPublisher>
+    <Company>UNKNOWNSTRYKER INTERACTIVE TECHNOLOGIES</Company>
+    <Authors>Joey 'Hojin' Lee</Authors>
+    <Copyright>Copyright © 2023 by Joey 'Hojin' Lee</Copyright>
+    <Trademark>Frogman Engine is a trademark of Joey 'Hojin' Lee</Trademark>
 
     <security>
       <requestedPrivileges>
