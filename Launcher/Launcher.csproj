@@ -37,6 +37,7 @@
     </UnoFeatures>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FrogmanEngine.Launcher.ScriptInterface" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <PackageReference Include="SevenZip" />
     <PackageReference Include="SharpCompress" />
@@ -72,5 +73,8 @@
     <Page Update="ProjectGeneratorPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="File Extension\" />
   </ItemGroup>
 </Project>

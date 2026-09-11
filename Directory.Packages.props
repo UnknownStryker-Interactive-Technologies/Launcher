@@ -8,6 +8,7 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
+    <PackageVersion Include="FrogmanEngine.Launcher.ScriptInterface" Version="0.0.1" />
     <PackageVersion Include="Google.Cloud.SecretManager.V1" Version="2.6.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />

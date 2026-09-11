@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -166,8 +167,6 @@ public sealed partial class ProjectGeneratorPage : Page
     }
 
 
-    private string mainDotCpp = "/*\r\nCopyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.\r\n\r\nLicensed under the Frogman Engine License (the \"License\");\r\nyou may not use this file except in compliance with the License.\r\nYou may obtain a copy of the License at\r\n\r\n\thttps://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md\r\n\r\nUnless required by applicable law or agreed to in writing, software\r\ndistributed under the License is distributed on an \"AS IS\" BASIS,\r\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\nSee the License for the specific language governing permissions and\r\nlimitations under the License.\r\n*/" +
-        "\r\n#include <FE/framework.hxx>\r\n#include <FE/engine.hpp>\r\nFROGMAN_ENGINE();";
 
 
     private void OnClickCreate(object sender, RoutedEventArgs e)
@@ -221,117 +220,73 @@ public sealed partial class ProjectGeneratorPage : Page
         }
 
 
-        string pathToAssetsFolder = System.IO.Path.Combine(newProjectDir, "Assets");
-        string pathToCMakeFolder = System.IO.Path.Combine(newProjectDir, "CMake");
-        string pathToIncludeFolder = System.IO.Path.Combine(newProjectDir, "Include");
-        string pathToSourceFolder = System.IO.Path.Combine(newProjectDir, "Source");
-
-        Directory.CreateDirectory(newProjectDir);
-        Directory.CreateDirectory(System.IO.Path.Combine(newProjectDir, "Binaries"));
-        Directory.CreateDirectory(pathToAssetsFolder);
-        Directory.CreateDirectory(pathToCMakeFolder);
-        Directory.CreateDirectory(pathToIncludeFolder);
-        Directory.CreateDirectory(pathToSourceFolder);
-
-        Froggy froggy = new();
         Debug.Assert(_selectedEngineInfo is not null);
-        froggy.EngineInfo = _selectedEngineInfo;
-        froggy.ProjectInfo.ProjectType = _projectType.ToString();
-        froggy.ProjectInfo.ProjectName = _newProjectName.Text;
-        froggy.ProjectInfo.ProjectPath = newProjectDir;
-        string jsonFlavoredFroggy = System.Text.Json.JsonSerializer.Serialize<Froggy>(froggy, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        Debug.Assert(_selectedEngineInfo.InstallationPath is not null);
+        Debug.Assert(_selectedEngineInfo.InstallationPath.Length > 0);
+        string dllPath = Path.Combine(_selectedEngineInfo.InstallationPath, ScriptMain.GdkLauncherScriptDllPathFromGdkRoot);
+        string pdbPath = Path.ChangeExtension(dllPath, ".pdb");
 
-        string froggyFileName = _newProjectName.Text + ".froggy";
-        string froggyFilePath = System.IO.Path.Combine(newProjectDir, froggyFileName);
-        File.WriteAllText(froggyFilePath, jsonFlavoredFroggy);
+        byte[] dll = File.ReadAllBytes(dllPath);
+        byte[] pdb = File.ReadAllBytes(pdbPath);
+        Assembly assembly = Assembly.Load(dll, pdb);
 
+        Type[] candidates = assembly.GetTypes()
+            .Where(type => type.IsPublic && (type.IsAbstract is false) && type.IsSubclassOf(typeof(ScriptMain)))
+            .ToArray();
 
-        string projectListPath = System.IO.Path.Combine(AppContext.BaseDirectory, "froggies.flist");
-        if (File.Exists(projectListPath) is not true)
+        if (candidates.Length is not 1)
         {
-            File.WriteAllText(projectListPath, "");
+            _errorText.Text = "Project Generation Failed! Launcher.ScriptMain's methods are not overriden or, more than one definitions of Launcher.ScriptMain's methods coexists.";
+            _newProjectName.IsReadOnly = false;
+
+            _progressBar.IsEnabled = false;
+            _progressBar.Visibility = Visibility.Collapsed;
+            _warningText.Visibility = Visibility.Collapsed;
+            return;
         }
-        string contents = File.ReadAllText(projectListPath);
+
+
+        ScriptMain script = (ScriptMain)Activator.CreateInstance(candidates[0])!;
+
+        Debug.Assert(_selectedEngineInfo is not null);
+        Froggy froggy = new Froggy
+        {
+            EngineInfo = _selectedEngineInfo,
+            ProjectInfo = new ProjectInfo
+            {
+                ProjectType = _projectType.ToString(),
+                ProjectName = _newProjectName.Text,
+                ProjectPath = newProjectDir
+            }
+        };
+
+        if (File.Exists(ScriptMain.ProjectListPath) is not true)
+        {
+            File.WriteAllText(ScriptMain.ProjectListPath, "");
+        }
+        string contents = File.ReadAllText(ScriptMain.ProjectListPath);
+        string froggyFileName = froggy.ProjectInfo.ProjectName + ".froggy";
+        string froggyFilePath = System.IO.Path.Combine(newProjectDir, froggyFileName);
         contents += froggyFilePath + ';';
-        File.WriteAllText(projectListPath, contents);
+        File.WriteAllText(ScriptMain.ProjectListPath, contents);
 
 
-        string launcherAssetFolderDir = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets");
-
-        // Generate the CMakeLists.txt and run the CMake to generate the project files. ${YOUR_PROJECT_NAME} ${TARGET_FE_GDK_PATH}
-        string? cmakeListsTxt;
-        string buildDotBatFile = File.ReadAllText( System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(launcherAssetFolderDir, "build.bat")) );
-        File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "build.bat"), buildDotBatFile);
-
-        string buildWithVs2022BatFile = File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(launcherAssetFolderDir, "build-with-vs2022.bat")));
-        File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "build-with-vs2022.bat"), buildWithVs2022BatFile);
-
-        string buildWithVs2026BatFile = File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(launcherAssetFolderDir, "build-with-vs2026.bat")));
-        File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "build-with-vs2026.bat"), buildWithVs2026BatFile);
-
-        File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, ".gitignore"), "Solution_X64_AVX/\r\nSolution_X64_AVX512F/", System.Text.Encoding.UTF8);
         switch (_projectType)
         {
         case ProjectType.cli:
-            cmakeListsTxt = File.ReadAllText( System.IO.Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForCLI.txt") );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
-            cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
-            cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
-
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "generated.cpp"), String.Empty, System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToIncludeFolder, "app.hpp"), Path.Combine(launcherAssetFolderDir, "cliapp.hpp"), System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToSourceFolder, "app.cpp"), Path.Combine(launcherAssetFolderDir, "cliapp.cpp"), System.Text.Encoding.UTF8);
+            script.CreateCommandLineInterfaceAppProject(_selectedEngineInfo, froggy.ProjectInfo);
             break;
 
         case ProjectType.game:
-            cmakeListsTxt = File.ReadAllText( System.IO.Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForGame.txt") );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
-            cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
-            cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
-
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "generated.cpp"), String.Empty, System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "main.cpp"), mainDotCpp, System.Text.Encoding.UTF8);
-
-            string iconFolder = System.IO.Path.Combine(pathToAssetsFolder, "Icon");
-            Directory.CreateDirectory(iconFolder);
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "runtime icon.png"), System.IO.Path.Combine(iconFolder, "runtime icon.png"));
-
-            string videoFolder = System.IO.Path.Combine(pathToAssetsFolder, "Video");
-            Directory.CreateDirectory(videoFolder);
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "runtime splash video 1.mp4"), System.IO.Path.Combine(videoFolder, "runtime splash video 1.mp4"));
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "runtime splash video 2.mp4"), System.IO.Path.Combine(videoFolder, "runtime splash video 2.mp4"));
-
-            Directory.CreateDirectory(System.IO.Path.Combine(pathToAssetsFolder, "Shaders"));
-
-            string splashFolder = System.IO.Path.Combine(pathToAssetsFolder, "Splash");
-            Directory.CreateDirectory(splashFolder);
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "Shader Compile Splash.png"), System.IO.Path.Combine(splashFolder, "Shader Compile Splash.png"));
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "Shader Compile Splash 2.png"), System.IO.Path.Combine(splashFolder, "Shader Compile Splash 2.png"));
-            File.Copy(System.IO.Path.Combine(launcherAssetFolderDir, "Shader Compile Splash 3.png"), System.IO.Path.Combine(splashFolder, "Shader Compile Splash 3.png"));
+            script.CreateGameProject(_selectedEngineInfo, froggy.ProjectInfo);
             break;
 
         case ProjectType.dll:
-            cmakeListsTxt = File.ReadAllText( System.IO.Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForDLL.txt") );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
-            cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
-            cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
-
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-            File.WriteAllText(System.IO.Path.Combine(pathToIncludeFolder, "placeholder.hpp"), String.Empty, System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToSourceFolder, "placeholder.cpp"), String.Empty, System.Text.Encoding.UTF8);
+            script.CreateDynamicLibraryProject(_selectedEngineInfo, froggy.ProjectInfo);
             break;
 
         case ProjectType.lib:
-            cmakeListsTxt = File.ReadAllText( System.IO.Path.Combine(launcherAssetFolderDir, "CMakeListsTemplateForLIB.txt") );
-            cmakeListsTxt = cmakeListsTxt.Replace("${YOUR_PROJECT_NAME}", froggy.ProjectInfo.ProjectName.Trim());
-            cmakeListsTxt = cmakeListsTxt.Replace("${TARGET_FE_GDK_PATH}", froggy.EngineInfo.InstallationPath);
-            cmakeListsTxt = cmakeListsTxt.Replace("\\", "/");
-
-            File.WriteAllText(System.IO.Path.Combine(pathToCMakeFolder, "CMakeLists.txt"), cmakeListsTxt);
-            File.WriteAllText(System.IO.Path.Combine(pathToIncludeFolder, "placeholder.hpp"), String.Empty, System.Text.Encoding.UTF8);
-            File.WriteAllText(System.IO.Path.Combine(pathToSourceFolder, "placeholder.cpp"), String.Empty, System.Text.Encoding.UTF8);
+            script.CreateStaticLibraryProject(_selectedEngineInfo,  froggy.ProjectInfo);
             break;
         
         default:
