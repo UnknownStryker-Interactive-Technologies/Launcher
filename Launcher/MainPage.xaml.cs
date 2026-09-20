@@ -8,6 +8,7 @@ using Microsoft.Win32;
 
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using Uno.Extensions;
 
 /*
     GNU AFFERO GENERAL PUBLIC LICENSE
@@ -211,8 +212,8 @@ public sealed partial class MainPage : Page
 
 
     private const string _engineInstallerLatestReleaseUrl = "https://api.github.com/repos/UnknownStryker-Interactive-Technology/Installer/releases/latest";
-    string _installationPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Installer.Windows.11.Edition");
-    string _installerUpdateDatePath = System.IO.Path.Combine(AppContext.BaseDirectory, "installer update.date");
+    string _installationPath = AppContext.BaseDirectory;
+    string _installerUpdateDatePath = System.IO.Path.Combine(AppContext.BaseDirectory, "installer-update.date");
     private bool _isClicked = false;
     private void OnClickLaunchEngineInstaller(object sender, RoutedEventArgs e)
     {
@@ -288,21 +289,69 @@ public sealed partial class MainPage : Page
                 }
 
 
-                if ((previousUpdateDate != updateDate) ||
-                    (Directory.Exists(_installationPath) is false))
+                Stack<int> stack = new();
+                string appPath = "\0";
+                foreach (string file in Directory.GetFiles(_installationPath))
                 {
-                    if (Directory.Exists(_installationPath) is true) // Always fetch the latest installer.
+                    if (file.Contains("Installer") && file.Contains(".exe"))
                     {
-                        Directory.Delete(_installationPath, true);
+                        appPath = file;
+                        goto Exit;
                     }
+                }
+                string[] folders = Directory.GetDirectories(_installationPath);
+                for (int f = 0; f < folders.Length; ++f)
+                {
+                    if (folders[f].Contains("Installer"))
+                    {
+                        foreach (string file in Directory.GetFiles(folders[f]))
+                        {
+                            if (file.Contains("Installer") && file.Contains(".exe"))
+                            {
+                                appPath = file;
+                                goto Exit;
+                            }
+                        }
 
-                    File.WriteAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "installer update.date"), updateDate);
+                        string[] nestedFolders = Directory.GetDirectories(folders[f]);
+                        if (nestedFolders.Length > 0)
+                        {
+                            stack.Push(f);
+                            f = -1;
+                            folders = nestedFolders;
+                            continue;
+                        }
+
+                        if (stack.Count == 0)
+                        {
+                            break;
+                        }
+                        var parent = Directory.GetParent(folders[f]);
+                        Debug.Assert(parent is not null);
+                        parent = Directory.GetParent(parent.FullName);
+                        Debug.Assert(parent is not null);
+                        folders = Directory.GetDirectories(parent.ToString());
+
+                        f = stack.Last();
+                        stack.Pop();
+                        continue;
+                    }
+                }
+            Exit:
+                if ((previousUpdateDate != updateDate) ||
+                    (File.Exists(appPath) is false))
+                {
+                    File.WriteAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "installer-update.date"), updateDate);
 
                     using HttpResponseMessage downloadRequestResponse = client.GetAsync(downloadURL).Result;
                     using Stream responseStream = downloadRequestResponse.Content.ReadAsStream();
 
-                    string downloadPath = _installationPath + ".7z";
-                    using FileStream fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    string zipPathAndNameToUseForDownload = Path.Combine(_installationPath, releaseJSON.ToString());
+                    if (File.Exists(zipPathAndNameToUseForDownload))
+                    {
+                        File.Delete(zipPathAndNameToUseForDownload);
+                    }
+                    using FileStream fileStream = new FileStream(zipPathAndNameToUseForDownload, FileMode.Create, FileAccess.Write, FileShare.None);
 
                     responseStream.CopyTo(fileStream);
 
@@ -310,8 +359,7 @@ public sealed partial class MainPage : Page
                     responseStream.Close();
 
                     {
-                        Directory.CreateDirectory(_installationPath);
-                        using IArchive archive = ArchiveFactory.OpenArchive(downloadPath);
+                        using IArchive archive = ArchiveFactory.OpenArchive(zipPathAndNameToUseForDownload);
                         foreach (var entry in archive.Entries)
                         {
                             if (entry.IsDirectory)
@@ -327,30 +375,73 @@ public sealed partial class MainPage : Page
                         }
                     }
 
-                    File.Delete(downloadPath);
+                    File.Delete(zipPathAndNameToUseForDownload);
                 }
             }
 
-            string _appName = "\0";
-            foreach (string file in Directory.GetFiles(_installationPath))
             {
-                if (file.EndsWith(".exe"))
+                Stack<int> stack = new();
+                string appName = "\0";
+                foreach (string file in Directory.GetFiles(_installationPath))
                 {
-                    _appName = System.IO.Path.GetFileName(file);
-                    break;
+                    if (file.Contains("Installer") && file.Contains(".exe"))
+                    {
+                        appName = System.IO.Path.GetFileName(file);
+                        goto Exit;
+                    }
                 }
+                string[] folders = Directory.GetDirectories(_installationPath);
+                for (int f = 0; f < folders.Length; ++f)
+                {
+                    if (folders[f].Contains("Installer"))
+                    {
+                        foreach (string file in Directory.GetFiles(folders[f]))
+                        {
+                            if (file.Contains("Installer") && file.Contains(".exe"))
+                            {
+                                _installationPath = folders[f];
+                                appName = System.IO.Path.GetFileName(file);
+                                goto Exit;
+                            }
+                        }
+
+                        string[] nestedFolders = Directory.GetDirectories(folders[f]);
+                        if (nestedFolders.Length > 0)
+                        {
+                            stack.Push(f);
+                            f = -1;
+                            folders = nestedFolders;
+                            continue;
+                        }
+
+                        if (stack.Count == 0)
+                        {
+                            break;
+                        }
+                        var parent = Directory.GetParent(folders[f]);
+                        Debug.Assert(parent is not null);
+                        parent = Directory.GetParent(parent.FullName);
+                        Debug.Assert(parent is not null);
+                        folders = Directory.GetDirectories(parent.ToString());
+
+                        f = stack.Last();
+                        stack.Pop();
+                        continue;
+                    }
+                }
+            Exit:
+                Debug.Assert(String.IsNullOrEmpty(appName) is not true);
+
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                {
+                    FileName = System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(_installationPath, appName)),
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+
+                Process.Start(processStartInfo);
+                _isClicked = false;
             }
-            Debug.Assert(String.IsNullOrEmpty(_appName) is not true);
-
-            ProcessStartInfo processStartInfo = new ProcessStartInfo
-            {
-                FileName = System.IO.Path.Combine(AppContext.BaseDirectory, System.IO.Path.Combine(_installationPath, _appName)),
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-
-            Process.Start(processStartInfo);
-            _isClicked = false;
         }
         catch (Exception ex)
         {
